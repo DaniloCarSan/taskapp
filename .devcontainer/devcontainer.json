@@ -1,0 +1,44 @@
+// https://aka.ms/devcontainer.json
+{
+    "name": "TaskApp",
+    "dockerComposeFile": ["../docker-compose.yml"],
+    "service": "laravel.test",
+    "workspaceFolder": "/var/www/html",
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "amiralizadeh9480.laravel-extra-intellisense",
+                "ryannaddy.laravel-artisan",
+                "onecentlin.laravel-blade",
+                "redhat.vscode-yaml",
+                "MS-CEINTL.vscode-language-pack-pt-BR",
+                "bmewburn.vscode-intelephense-client",
+                "xdebug.php-debug",
+                "zobo.php-intellisense",
+                "42Crunch.vscode-openapi",
+                "ms-vscode.makefile-tools",
+                "GitHub.vscode-pull-request-github",
+                "github.vscode-github-actions",
+                "ms-azuretools.vscode-docker"
+            ],
+            "settings": {
+                "terminal.integrated.profiles.linux": {
+                    "bash": {
+                        "path": "bash",
+                        "icon": "terminal-bash"
+                    }
+                },
+                "terminal.integrated.defaultProfile.linux": "bash",
+                "editor.fontSize": 12,
+                "editor.tabSize": 4,
+                "editor.rulers": [120],
+                "editor.formatOnSave": true
+            }
+        }
+    },
+    "remoteUser": "sail",
+    "postCreateCommand": "chown -R 1000:1000 /var/www/html",
+    "forwardPorts": ["mailpit:8025", "mariadb:3306"],
+    "runServices": [],
+    "shutdownAction": "none"
+}
