@@ -27,7 +27,7 @@ jobs:
           MYSQL_PASSWORD: root
           MYSQL_ROOT_PASSWORD: root
         ports:
-          - 3306:3306
+          - 33306:3306
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
     steps:
       - uses: actions/checkout@v2
@@ -42,12 +42,12 @@ jobs:
       - name: Set up MySQL
         env:
           DB_DATABASE: taskapp
-          DB_USER: root
+          DB_USERNAME: root
           DB_PORT: ${{ job.services.mysql.ports[3306] }}
           DB_PASSWORD: root
         run: |
           sudo /etc/init.d/mysql start
-          mysql  -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }} -e 'CREATE DATABASE `${{ env.DB_DATABASE }}`;'
+          mysql  -u${{ env.DB_USERNAME }} -p${{ env.DB_PASSWORD }} -e 'CREATE DATABASE `${{ env.DB_DATABASE }}`;'
       - name: Migrate
         run: |
           php artisan migrate:install
