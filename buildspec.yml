@@ -20,7 +20,7 @@ phases:
       - npm install
   build:
     commands:
-      - npm run prod
+      - npm run build
       - composer install --optimize-autoloader --no-dev
 artifacts:
   files:
