@@ -1,0 +1,46 @@
+version: 0.0
+os: linux
+files:
+  - source: /app
+    destination: /var/www/html/app
+  - source: /bootstrap
+    destination: /var/www/html/bootstrap
+  - source: /config
+    destination: /var/www/html/config
+  - source: /database
+    destination: /var/www/html/database
+  - source: /lang
+    destination: /var/www/html/lang
+  - source: /public
+    destination: /var/www/html/public
+  - source: /resources
+    destination: /var/www/html/resources
+  - source: /routes
+    destination: /var/www/html/routes
+  - source: /storage
+    destination: /var/www/html/storage
+  - source: /vendor
+    destination: /var/www/html/vendor
+  - source: /.env.example
+    destination: /var/www/html
+  - source: /composer.json
+    destination: /var/www/html
+  - source: /composer.lock
+    destination: /var/www/html
+  - source: /artisan
+    destination: /var/www/html
+  - source: /server.php
+    destination: /var/www/html
+hooks:
+  BeforeInstall:
+    - location: scripts/install_dependencies
+      timeout: 180
+  AfterInstall:
+    - location: scripts/after_install
+      timeout: 180
+  ApplicationStart:
+    - location: scripts/start_server
+      timeout: 60
+  ApplicationStop:
+    - location: scripts/stop_server
+      timeout: 60

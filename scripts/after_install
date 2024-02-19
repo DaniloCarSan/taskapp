@@ -1,0 +1,83 @@
+#!/bin/bash
+
+BASE_PATH=/var/www/html/taskapp/public
+BASE_PATH_APP=/var/www/html/taskapp
+
+# Parâmetros do php.ini
+ALLOW_URL_FOPEN="On"
+ALLOW_URL_INCLUDE="Off"
+DISPLAY_ERRORS="Off"
+ENABLE_DL="Off"
+FILE_UPLOADS="On"
+MAX_EXECUTION_TIME="600"
+MAX_INPUT_TIME="180"
+MAX_INPUT_VARS="5000"
+MEMORY_LIMIT="556M"
+POST_MAX_SIZE="400M"
+SESSION_GC_MAXLIFETIME="1440"
+SESSION_SAVE_PATH="/efs-taskapp"
+UPLOAD_MAX_FILESIZE="100M"
+ZLIB_OUTPUT_COMPRESSION="Off"
+PCRE_BACKTRACK_LIMIT="5000000"
+
+cp /etc/php.ini /etc/php.ini.bak
+
+# Altera os valores dos parâmetros no arquivo /etc/php.ini
+sed -i "s/^;\?zlib.output_compression\s*=.*/zlib.output_compression=$ZLIB_OUTPUT_COMPRESSION/g" /etc/php.ini
+sed -i "s/^;\?upload_max_filesize\s*=.*/upload_max_filesize=$UPLOAD_MAX_FILESIZE/g" /etc/php.ini
+sed -i "s|^;\?session\.save_path\s*=.*|session.save_path = \"${SESSION_SAVE_PATH}\"|" /etc/php.ini
+sed -i 's/^\(session.gc_maxlifetime\s*=\s*\).*\$/\1${SESSION_GC_MAXLIFETIME}/' /etc/php.ini
+sed -i "s/^;\?post_max_size\s*=.*/post_max_size=$POST_MAX_SIZE/g" /etc/php.ini
+sed -i "s/^;\?memory_limit\s*=.*/memory_limit=$MEMORY_LIMIT/g" /etc/php.ini
+sed -i "s/^;\?max_input_vars\s*=.*/max_input_vars=$MAX_INPUT_VARS/g" /etc/php.ini
+sed -i "s/^;\?pcre.backtrack_limit\s*=.*/pcre.backtrack_limit=$PCRE_BACKTRACK_LIMIT/g" /etc/php.ini
+sed -i "s/^;\?max_input_time\s*=.*/max_input_time=$MAX_INPUT_TIME/g" /etc/php.ini
+sed -i "s/^;\?max_execution_time\s*=.*/max_execution_time=$MAX_EXECUTION_TIME/g" /etc/php.ini
+sed -i "s/^;\?file_uploads\s*=.*/file_uploads=$FILE_UPLOADS/g" /etc/php.ini
+sed -i "s/^;\?enable_dl\s*=.*/enable_dl=$ENABLE_DL/g" /etc/php.ini
+sed -i "s/^;\?display_errors\s*=.*/display_errors=$DISPLAY_ERRORS/g" /etc/php.ini
+sed -i "s/^;\?allow_url_include\s*=.*/allow_url_include=$ALLOW_URL_INCLUDE/g" /etc/php.ini
+
+# Cria o arquivo de configuração do Apache para o app taskapp
+sudo cat << EOF > /etc/httpd/conf.d/taskapp.conf
+<VirtualHost *:80>
+    ServerName $SERVER_NAME
+    DocumentRoot $BASE_PATH
+
+    <Directory $BASE_PATH>
+        AllowOverride All
+        Require all granted
+    </Directory>
+</VirtualHost>
+EOF
+
+# Altera o diretório raiz do Apache para /var/www/html/public_html
+sudo sed -i 's|DocumentRoot "/var/www/html/public_html"|DocumentRoot "/var/www/html/taskapp/public"|g' /etc/httpd/conf/httpd.conf
+sed -i 's/<Directory "\/var\/www\/html">/<Directory \/var\/www\/html\/taskapp\/public>/g' /etc/httpd/conf/httpd.conf
+sed -i 's/DirectoryIndex index.html/DirectoryIndex index.php/g' /etc/httpd/conf/httpd.conf
+
+# Remoção da página welcome do Apache
+sudo rm -f /etc/httpd/conf.d/welcome.conf
+
+# Configura o arquivo que contem as variáveis de ambiente do sistema
+sudo cp $BASE_PATH_APP/.env.example $BASE_PATH_APP/.env
+
+# # Configura o framework laravel
+cd $BASE_PATH_APP
+
+sudo php artisan route:clear
+sudo php artisan view:clear
+sudo php artisan config:clear
+
+echo "yes" | sudo php artisan key:generate
+
+sudo php artisan config:cache
+sudo php artisan view:cache
+sudo php artisan route:cache
+sudo php artisan route:cache #NÃO RETIRAR
+
+sudo php artisan storage:link
+
+# #Altera as permissões da pasta public_html para permitir a leitura e execução
+sudo chown apache:apache -R /var/www/html
+sudo chmod -R 755 /var/www/html
