@@ -1,5 +1,5 @@
 #!/bin/bash
-
+$SERVER_NAME=$(curl -s ifconfig.me)
 BASE_PATH=/var/www/html/taskapp/public
 BASE_PATH_APP=/var/www/html/taskapp
 
