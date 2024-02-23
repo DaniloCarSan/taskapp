@@ -9,8 +9,6 @@ files:
     destination: /var/www/html/config
   - source: /database
     destination: /var/www/html/database
-  - source: /lang
-    destination: /var/www/html/lang
   - source: /public
     destination: /var/www/html/public
   - source: /resources
