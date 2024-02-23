@@ -2,31 +2,31 @@ version: 0.0
 os: linux
 files:
   - source: /app
-    destination: /var/www/html/app
+    destination: /var/www/html/taskapp/app
   - source: /bootstrap
-    destination: /var/www/html/bootstrap
+    destination: /var/www/html/taskapp/bootstrap
   - source: /config
-    destination: /var/www/html/config
+    destination: /var/www/html/taskapp/config
   - source: /database
-    destination: /var/www/html/database
+    destination: /var/www/html/taskapp/database
   - source: /public
-    destination: /var/www/html/public
+    destination: /var/www/html/taskapp/public
   - source: /resources
-    destination: /var/www/html/resources
+    destination: /var/www/html/taskapp/resources
   - source: /routes
-    destination: /var/www/html/routes
+    destination: /var/www/html/taskapp/routes
   - source: /storage
-    destination: /var/www/html/storage
+    destination: /var/www/html/taskapp/storage
   - source: /vendor
-    destination: /var/www/html/vendor
+    destination: /var/www/html/taskapp/vendor
   - source: /.env.example
-    destination: /var/www/html
+    destination: /var/www/html/taskapp
   - source: /composer.json
-    destination: /var/www/html
+    destination: /var/www/html/taskapp
   - source: /composer.lock
-    destination: /var/www/html
+    destination: /var/www/html/taskapp
   - source: /artisan
-    destination: /var/www/html
+    destination: /var/www/html/taskapp
 hooks:
   BeforeInstall:
     - location: scripts/install_dependencies
