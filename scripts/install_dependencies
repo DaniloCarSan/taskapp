@@ -1,5 +1,5 @@
 #!/bin/bash
-amazon-linux-extras enable php8.2
+sudo yum install php -y
 yum install httpd -y
 yum update -y
 yum upgrade -y
