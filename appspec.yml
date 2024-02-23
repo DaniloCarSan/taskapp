@@ -27,8 +27,6 @@ files:
     destination: /var/www/html
   - source: /artisan
     destination: /var/www/html
-  - source: /server.php
-    destination: /var/www/html
 hooks:
   BeforeInstall:
     - location: scripts/install_dependencies
