@@ -1,5 +1,5 @@
 #!/bin/bash
-$SERVER_NAME=$(curl -s ifconfig.me)
+$SERVER_NAME=lb-prod-556906831.us-east-1.elb.amazonaws.com
 BASE_PATH=/var/www/html/taskapp/public
 BASE_PATH_APP=/var/www/html/taskapp
 
